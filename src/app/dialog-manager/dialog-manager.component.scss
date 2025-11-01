@@ -1,8 +1,8 @@
 .dock {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 2000;
+  //position: sticky;
+  //bottom: 20px;
+  //right: 20px;
+  //z-index: 2000;
 }
 
 //:host ::ng-deep .p-overlaypanel {
@@ -12,4 +12,12 @@
 .custom-dialog-title{
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.actions-section{
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
