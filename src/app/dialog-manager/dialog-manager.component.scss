@@ -1,0 +1,15 @@
+.dock {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+}
+
+//:host ::ng-deep .p-overlaypanel {
+//  min-width: 200px;
+//}
+
+.custom-dialog-title{
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,47 @@
+<!-- Button to open new dialog -->
+<button pButton label="Open New Dialog" icon="pi pi-plus" (click)="openNewDialog()"></button>
+
+<!-- Active dialogs -->
+<p-dialog
+  *ngFor="let dialog of dialogs"
+  [(visible)]="dialog.visible"
+  [modal]="false"
+  [resizable]="false"
+  [draggable]="true"
+  [baseZIndex]="1000 + dialog.id"
+  [style]="{ width: '500px' }"
+>
+  <ng-template pTemplate="header">
+    <div class="custom-dialog-title">
+      <span>{{ dialog.title }}</span>
+      <div class="flex gap-2">
+        <p-button (click)="toggleMinimize(dialog)" [rounded]="true" [text]="true" icon="{{ dialog.minimized ? 'pi pi-window-maximize' : 'pi pi-window-minimize' }}" />
+        <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-times"/>
+      </div>
+    </div>
+  </ng-template>
+
+  <p>{{ dialog.content }}</p>
+</p-dialog>
+
+<!-- Dock area -->
+<div class="dock" (click)="toggleDock()">
+  <p-button (click)="op.toggle($event)" icon="pi pi-window-minimize" label="Minimized ({{ minimizedDialogs.length }})" />
+  <p-popover #op [dismissable]="true" appendTo="body">
+    <div *ngIf="minimizedDialogs.length > 0; else noMinimized">
+      <ul class="list-none m-0 p-0">
+        <li
+          *ngFor="let dialog of minimizedDialogs"
+          class="flex align-items-center justify-content-between py-2 px-3 hover:bg-gray-100 cursor-pointer"
+          (click)="restoreDialog(dialog)"
+        >
+          <span>{{ dialog.title }}</span>
+          <button pButton icon="pi pi-window-maximize" class="p-button-text p-button-sm"></button>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noMinimized>
+      <div class="p-3 text-sm text-gray-500">No minimized dialogs</div>
+    </ng-template>
+  </p-popover>
+</div>
