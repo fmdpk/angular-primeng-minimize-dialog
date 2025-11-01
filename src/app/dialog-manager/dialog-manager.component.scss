@@ -9,15 +9,34 @@
 //  min-width: 200px;
 //}
 
-.custom-dialog-title{
+.custom-dialog-title {
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
 }
 
-.actions-section{
+.actions-section {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.minimized-dialogs-list {
+  list-style-type: none;
+  padding-left: 0;
+
+  li {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.minimized-dialogs-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }

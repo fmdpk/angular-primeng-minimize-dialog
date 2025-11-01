@@ -5,15 +5,17 @@
     <p-button (click)="op.toggle($event)" icon="pi pi-window-minimize" label="Minimized ({{ minimizedDialogs.length }})" />
     <p-popover #op [dismissable]="true" appendTo="body">
       <div *ngIf="minimizedDialogs.length > 0; else noMinimized">
-        <ul class="list-none m-0 p-0">
+        <ul class="minimized-dialogs-list">
           <li
             *ngFor="let dialog of minimizedDialogs"
             class="flex align-items-center justify-content-between py-2 px-3 hover:bg-gray-100 cursor-pointer"
             (click)="restoreDialog(dialog)"
           >
             <span>{{ dialog.title }}</span>
-            <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-window-maximize"/>
-            <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-times"/>
+            <div class="minimized-dialogs-actions">
+              <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-window-maximize"/>
+              <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-times"/>
+            </div>
           </li>
         </ul>
       </div>
