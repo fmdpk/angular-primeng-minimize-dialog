@@ -66,16 +66,6 @@ export class DialogManagerComponent {
     }
   }
 
-  restoreDialog(dialog: AppDialog) {
-    dialog.minimized = false;
-    dialog.visible = true;
-    this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialog.id);
-  }
-
-  toggleDock() {
-    this.dockVisible = !this.dockVisible;
-  }
-
   closeDialog(dialog: AppDialog) {
     this.dialogs = this.dialogs.filter(d => d.id !== dialog.id);
     this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialog.id);
