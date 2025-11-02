@@ -8,7 +8,7 @@
         <ul class="minimized-dialogs-list">
           <li
             *ngFor="let dialog of minimizedDialogs"
-            class="flex align-items-center justify-content-between py-2 px-3 hover:bg-gray-100 cursor-pointer"
+            class="flex align-items-center justify-content-between py-2 px-3 cursor-pointer"
             (click)="restoreDialog(dialog)"
           >
             <span>{{ dialog.title }}</span>
@@ -30,6 +30,8 @@
 <p-dialog
   appendTo="body"
   [styleClass]="'minimizable-dialogs'"
+  [contentStyleClass]="'minimizable-dialogs-content-style-class'"
+  class="minimizable-dialogs-content-style-class"
   *ngFor="let dialog of dialogs"
   [(visible)]="dialog.visible"
   [modal]="false"
@@ -48,5 +50,6 @@
     </div>
   </ng-template>
 
-  <p>{{ dialog.content }}</p>
+<!--  <p>{{ dialog.content }}</p>-->
+  <app-dialog-content [componentData]="dialog.data" [componentType]="dialog.component"></app-dialog-content>
 </p-dialog>

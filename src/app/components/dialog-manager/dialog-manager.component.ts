@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import {Component, Type} from '@angular/core';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {PrimeTemplate} from 'primeng/api';
 import {PopoverModule} from 'primeng/popover';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgComponentOutlet, NgForOf, NgIf} from '@angular/common';
+import {DialogContentComponent} from './child-components/dialog-content/dialog-content.component';
+import {UserFormComponent} from '../user-form/user-form.component';
+import {ReportViewerComponent} from '../report-viewer/report-viewer.component';
 
 interface AppDialog {
   id: number;
@@ -11,6 +14,8 @@ interface AppDialog {
   content: string;
   visible: boolean;
   minimized: boolean;
+  data?: any,
+  component: any
 }
 
 @Component({
@@ -24,7 +29,9 @@ interface AppDialog {
     ButtonModule,
     PopoverModule,
     NgForOf,
-    NgIf
+    NgIf,
+    NgComponentOutlet,
+    DialogContentComponent
   ],
 })
 export class DialogManagerComponent {
@@ -39,7 +46,11 @@ export class DialogManagerComponent {
       title: `Dialog #${this.dialogCounter}`,
       content: `This is the content of dialog #${this.dialogCounter}`,
       visible: true,
-      minimized: false
+      minimized: false,
+      data: {
+        id: this.dialogCounter
+      },
+      component: this.dialogCounter % 2 === 0 ? UserFormComponent : ReportViewerComponent
     };
     this.dialogs.push(newDialog);
   }
