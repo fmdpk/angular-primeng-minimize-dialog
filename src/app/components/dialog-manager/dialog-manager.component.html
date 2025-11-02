@@ -1,6 +1,6 @@
 <!-- Button to open new dialog -->
 <div class="actions-section">
-  <button pButton label="Open New Dialog" icon="pi pi-plus" (click)="openNewDialog()"></button>
+  <p-button (click)="openNewDialog()" icon="pi pi-plus" label="Open New Dialog" />
   <div class="dock">
     <p-button (click)="op.toggle($event)" icon="pi pi-window-minimize" label="Minimized ({{ minimizedDialogs.length }})" />
     <p-popover #op [dismissable]="true" appendTo="body">
