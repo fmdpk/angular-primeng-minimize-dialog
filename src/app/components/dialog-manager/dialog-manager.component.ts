@@ -9,6 +9,8 @@ import {UserFormComponent} from '../user-form/user-form.component';
 import {ReportViewerComponent} from '../report-viewer/report-viewer.component';
 import {CustomDialogManagerService, DialogAction} from '../../services/custom-dialog-manager.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
+import {DialogHeaderComponent} from '../dialog-header/dialog-header.component';
 
 export interface AppDialog {
   id: number;
@@ -36,13 +38,16 @@ export interface AppDialog {
     NgComponentOutlet,
     DialogContentComponent
   ],
+  providers: [DialogService]
 })
 export class DialogManagerComponent implements OnInit {
   dialogs: AppDialog[] = [];
   minimizedDialogs: AppDialog[] = [];
   dialogCounter = 0;
   customDialogManagerService: CustomDialogManagerService = inject(CustomDialogManagerService)
+  dialogService: DialogService = inject(DialogService)
   destroyRef: DestroyRef = inject(DestroyRef)
+  ref: DynamicDialogRef | undefined;
 
   ngOnInit() {
     this.customDialogManagerService.dialogAction$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res: DialogAction) => {
@@ -56,19 +61,38 @@ export class DialogManagerComponent implements OnInit {
   }
 
   openNewDialog() {
-    let newDialog: AppDialog = {
-      id: ++this.dialogCounter,
-      title: `Dialog #${this.dialogCounter}`,
-      content: `This is the content of dialog #${this.dialogCounter}`,
-      visible: true,
-      class: `Dialog-${this.dialogCounter} minimizable-dialogs`,
-      minimized: false,
-      data: {
-        id: this.dialogCounter
+    // let newDialog: AppDialog = {
+    //   id: ++this.dialogCounter,
+    //   title: `Dialog #${this.dialogCounter}`,
+    //   content: `This is the content of dialog #${this.dialogCounter}`,
+    //   visible: true,
+    //   class: `Dialog-${this.dialogCounter} minimizable-dialogs`,
+    //   minimized: false,
+    //   data: {
+    //     id: this.dialogCounter
+    //   },
+    //   component: this.dialogCounter % 2 === 0 ? UserFormComponent : ReportViewerComponent
+    // };
+    // this.dialogs.push(newDialog);
+    this.ref = this.dialogService.open(UserFormComponent, {
+      header: 'Select a Product',
+      closeOnEscape: true,
+      keepInViewport: false,
+      resizable: true,
+      width: '50vw',
+      modal:true,
+      draggable: true,
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw'
       },
-      component: this.dialogCounter % 2 === 0 ? UserFormComponent : ReportViewerComponent
-    };
-    this.dialogs.push(newDialog);
+      data: {
+        dialog: this.dialogCounter
+      },
+      templates: {
+        header: DialogHeaderComponent
+      }
+    });
   }
 
   toggleMinimize(dialog: AppDialog) {
