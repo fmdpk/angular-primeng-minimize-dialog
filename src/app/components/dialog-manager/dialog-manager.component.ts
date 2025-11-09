@@ -1,4 +1,4 @@
-import {Component, Type} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, Type} from '@angular/core';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {PrimeTemplate} from 'primeng/api';
@@ -7,8 +7,10 @@ import {NgComponentOutlet, NgForOf, NgIf} from '@angular/common';
 import {DialogContentComponent} from './child-components/dialog-content/dialog-content.component';
 import {UserFormComponent} from '../user-form/user-form.component';
 import {ReportViewerComponent} from '../report-viewer/report-viewer.component';
+import {CustomDialogManagerService, DialogAction} from '../../services/custom-dialog-manager.service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
-interface AppDialog {
+export interface AppDialog {
   id: number;
   title: string;
   content: string;
@@ -35,11 +37,23 @@ interface AppDialog {
     DialogContentComponent
   ],
 })
-export class DialogManagerComponent {
+export class DialogManagerComponent implements OnInit {
   dialogs: AppDialog[] = [];
   minimizedDialogs: AppDialog[] = [];
   dialogCounter = 0;
-  dockVisible = false;
+  customDialogManagerService: CustomDialogManagerService = inject(CustomDialogManagerService)
+  destroyRef: DestroyRef = inject(DestroyRef)
+
+  ngOnInit() {
+    this.customDialogManagerService.dialogAction$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res: DialogAction) => {
+      if (res.dialogId) {
+        if (res.action === 'close') {
+          this.closeDialog({id: res.dialogId})
+        }
+        this.customDialogManagerService.dialogAction$.next({dialogId: 0, action: ''})
+      }
+    })
+  }
 
   openNewDialog() {
     let newDialog: AppDialog = {
@@ -63,20 +77,24 @@ export class DialogManagerComponent {
     console.log(dialog)
     let elem = document.getElementsByClassName(`${dialog.class.split(' ')[0]}`)
     console.log(elem)
-    if(elem[0].parentElement && dialog.minimized){
+    if (elem[0].parentElement && dialog.minimized) {
       elem[0].parentElement.style.display = 'none';
-    } else if(elem[0].parentElement && !dialog.minimized) {
+    } else if (elem[0].parentElement && !dialog.minimized) {
       elem[0].parentElement.style.display = 'flex';
     }
 
     if (dialog.minimized) {
       this.minimizedDialogs.push(dialog);
     } else {
-      this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialog.id);
+      this.filterDialog(dialog.id)
     }
   }
 
-  closeDialog(dialog: AppDialog) {
+  filterDialog(dialogId: number) {
+    this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialogId);
+  }
+
+  closeDialog(dialog: Partial<AppDialog>) {
     this.dialogs = this.dialogs.filter(d => d.id !== dialog.id);
     this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialog.id);
   }
