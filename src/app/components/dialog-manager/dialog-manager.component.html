@@ -28,7 +28,7 @@
 <!-- Active dialogs -->
 <p-dialog
   appendTo="body"
-  [styleClass]="'minimizable-dialogs'"
+  [styleClass]="dialog.class"
   *ngFor="let dialog of dialogs"
   [(visible)]="dialog.visible"
   [modal]="false"

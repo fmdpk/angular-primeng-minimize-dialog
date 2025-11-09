@@ -16,6 +16,7 @@ interface AppDialog {
   minimized: boolean;
   data?: any,
   component: any
+  class: string
 }
 
 @Component({
@@ -46,6 +47,7 @@ export class DialogManagerComponent {
       title: `Dialog #${this.dialogCounter}`,
       content: `This is the content of dialog #${this.dialogCounter}`,
       visible: true,
+      class: `Dialog-${this.dialogCounter} minimizable-dialogs`,
       minimized: false,
       data: {
         id: this.dialogCounter
@@ -57,7 +59,15 @@ export class DialogManagerComponent {
 
   toggleMinimize(dialog: AppDialog) {
     dialog.minimized = !dialog.minimized;
-    dialog.visible = !dialog.minimized;
+    // dialog.visible = !dialog.minimized;
+    console.log(dialog)
+    let elem = document.getElementsByClassName(`${dialog.class.split(' ')[0]}`)
+    console.log(elem)
+    if(elem[0].parentElement && dialog.minimized){
+      elem[0].parentElement.style.display = 'none';
+    } else if(elem[0].parentElement && !dialog.minimized) {
+      elem[0].parentElement.style.display = 'flex';
+    }
 
     if (dialog.minimized) {
       this.minimizedDialogs.push(dialog);
