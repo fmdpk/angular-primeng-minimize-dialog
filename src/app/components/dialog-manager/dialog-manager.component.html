@@ -32,6 +32,7 @@
   *ngFor="let dialog of dialogs"
   [(visible)]="dialog.visible"
   [modal]="false"
+  [closeOnEscape]="true"
   [resizable]="true"
   [draggable]="true"
   [baseZIndex]="1000 + dialog.id"
