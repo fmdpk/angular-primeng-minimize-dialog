@@ -15,6 +15,7 @@ export interface AppDialog {
   title: string;
   content: string;
   visible: boolean;
+  isModal: boolean;
   minimized: boolean;
   data?: any,
   component: any
@@ -61,6 +62,7 @@ export class DialogManagerComponent implements OnInit {
       title: `Dialog #${this.dialogCounter}`,
       content: `This is the content of dialog #${this.dialogCounter}`,
       visible: true,
+      isModal: false,
       class: `Dialog-${this.dialogCounter} minimizable-dialogs`,
       minimized: false,
       data: {

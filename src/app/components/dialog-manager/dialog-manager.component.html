@@ -31,7 +31,7 @@
   [styleClass]="dialog.class"
   *ngFor="let dialog of dialogs"
   [(visible)]="dialog.visible"
-  [modal]="false"
+  [modal]="dialog.isModal"
   [closeOnEscape]="true"
   [resizable]="true"
   [draggable]="true"
