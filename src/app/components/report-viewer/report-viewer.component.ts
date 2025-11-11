@@ -1,9 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Button} from 'primeng/button';
+import { FocusTrapModule } from 'primeng/focustrap';
 
 @Component({
   selector: 'app-report-viewer',
   standalone: true,
-  imports: [],
+  imports: [
+    Button,
+    FocusTrapModule
+  ],
   templateUrl: './report-viewer.component.html',
   styleUrl: './report-viewer.component.scss'
 })

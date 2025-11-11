@@ -24,30 +24,3 @@
     </p-popover>
   </div>
 </div>
-
-<!-- Active dialogs -->
-<p-dialog
-  appendTo="body"
-  [styleClass]="dialog.class"
-  *ngFor="let dialog of dialogs"
-  [(visible)]="dialog.visible"
-  [modal]="false"
-  [closeOnEscape]="true"
-  [resizable]="true"
-  [draggable]="true"
-  [baseZIndex]="1000 + dialog.id"
-  [style]="{ width: '500px' }"
->
-  <ng-template pTemplate="header">
-    <div class="custom-dialog-title">
-      <span>{{ dialog.title }}</span>
-      <div class="flex gap-2">
-        <p-button (click)="toggleMinimize(dialog)" [rounded]="true" [text]="true" icon="{{ dialog.minimized ? 'pi pi-window-maximize' : 'pi pi-window-minimize' }}" />
-        <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-times"/>
-      </div>
-    </div>
-  </ng-template>
-
-<!--  <p>{{ dialog.content }}</p>-->
-  <app-dialog-content [componentData]="dialog.data" [componentType]="dialog.component"></app-dialog-content>
-</p-dialog>

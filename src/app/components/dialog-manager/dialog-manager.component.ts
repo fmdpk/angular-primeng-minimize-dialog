@@ -17,7 +17,6 @@ export interface AppDialog {
   visible: boolean;
   minimized: boolean;
   data?: any,
-  component: any
   class: string
 }
 
@@ -70,10 +69,10 @@ export class DialogManagerComponent implements OnInit {
       data: {
         id: this.dialogCounter
       },
-      component
     };
     this.ref = this.dialogService.open(await component(), {
       header: 'Select a Product',
+      focusTrap: true,
       closeOnEscape: true,
       keepInViewport: false,
       resizable: true,
