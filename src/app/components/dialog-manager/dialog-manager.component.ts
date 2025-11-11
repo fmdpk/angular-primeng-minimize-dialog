@@ -16,6 +16,7 @@ export interface AppDialog {
   content: string;
   visible: boolean;
   minimized: boolean;
+  dialogRef?: DynamicDialogRef
   data?: any,
   class: string
 }
@@ -40,19 +41,21 @@ export interface AppDialog {
 export class DialogManagerComponent implements OnInit {
   dialogs: AppDialog[] = [];
   minimizedDialogs: AppDialog[] = [];
+  dialogRefs: DynamicDialogRef[] = [];
   dialogCounter = 0;
   customDialogManagerService: CustomDialogManagerService = inject(CustomDialogManagerService)
   dialogService: DialogService = inject(DialogService)
   destroyRef: DestroyRef = inject(DestroyRef)
   ref: DynamicDialogRef | undefined;
+  renderedComponents: any[] = []
 
   ngOnInit() {
     this.customDialogManagerService.dialogAction$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((res: DialogAction) => {
-      if (res.dialogId) {
-        if (res.action === 'close') {
-          this.closeDialog({id: res.dialogId})
+      if (res.dialog) {
+        if (res.action === 'minimize') {
+          this.minimizedDialogs.push(res.dialog)
         }
-        this.customDialogManagerService.dialogAction$.next({dialogId: 0, action: ''})
+        this.customDialogManagerService.dialogAction$.next({})
       }
     })
   }
@@ -70,19 +73,27 @@ export class DialogManagerComponent implements OnInit {
         id: this.dialogCounter
       },
     };
+
     this.ref = this.dialogService.open(await component(), {
       header: 'Select a Product',
+      duplicate: true,
       focusTrap: true,
       closeOnEscape: true,
+      dismissableMask: false,
+      maskStyleClass: 'custom-dialog-mask',
+      autoZIndex: true,
+      focusOnShow: true,
+      appendTo: 'body',
       keepInViewport: false,
+      styleClass: newDialogData.class,
       resizable: true,
       width: '50vw',
       modal:true,
       draggable: true,
-      breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw'
-      },
+      // breakpoints: {
+      //   '960px': '75vw',
+      //   '640px': '90vw'
+      // },
       data: {
         dialog: newDialogData
       },
@@ -90,33 +101,39 @@ export class DialogManagerComponent implements OnInit {
         header: DialogHeaderComponent
       }
     });
+    console.log(this.ref)
+    this.dialogRefs.push(this.ref)
   }
 
-  toggleMinimize(dialog: AppDialog) {
-    dialog.minimized = !dialog.minimized;
-    // dialog.visible = !dialog.minimized;
-    console.log(dialog)
-    let elem = document.getElementsByClassName(`${dialog.class.split(' ')[0]}`)
-    console.log(elem)
-    if (elem[0].parentElement && dialog.minimized) {
-      elem[0].parentElement.style.display = 'none';
-    } else if (elem[0].parentElement && !dialog.minimized) {
-      elem[0].parentElement.style.display = 'flex';
-    }
-
-    if (dialog.minimized) {
-      this.minimizedDialogs.push(dialog);
+  async getDialogComponent(component: any, name: string){
+    let foundItem = this.renderedComponents.find((item) => item.name === name)
+    console.log(foundItem)
+    console.log(this.renderedComponents)
+    if(!!foundItem){
+      console.log(foundItem)
+      console.log(foundItem.component)
+      return foundItem.component
     } else {
-      this.filterDialog(dialog.id)
+      foundItem = await component()
+      this.renderedComponents.push({
+        name,
+        component: foundItem
+      })
+      return foundItem
     }
   }
 
-  filterDialog(dialogId: number) {
+  enlargeDialog(dialog: AppDialog) {
+    this.filterMinimizedDialogs(dialog.id)
+    this.customDialogManagerService.dialogAction$.next({dialog: dialog, dialogRef: dialog.dialogRef,action: 'enlarge'})
+  }
+
+  filterMinimizedDialogs(dialogId: number) {
     this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialogId);
   }
 
   closeDialog(dialog: Partial<AppDialog>) {
-    this.dialogs = this.dialogs.filter(d => d.id !== dialog.id);
     this.minimizedDialogs = this.minimizedDialogs.filter(d => d.id !== dialog.id);
+    dialog.dialogRef?.close()
   }
 }

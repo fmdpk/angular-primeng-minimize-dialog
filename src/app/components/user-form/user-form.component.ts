@@ -1,6 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {Button} from 'primeng/button';
 import {CustomDialogManagerService} from '../../services/custom-dialog-manager.service';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-user-form',
@@ -13,8 +14,7 @@ import {CustomDialogManagerService} from '../../services/custom-dialog-manager.s
 })
 export class UserFormComponent implements OnInit{
   @Input() id!: number;
-
-  customDialogManager: CustomDialogManagerService = inject(CustomDialogManagerService)
+  dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef)
 
   ngOnInit(){
     console.log('app-user-form')
@@ -22,6 +22,6 @@ export class UserFormComponent implements OnInit{
   }
 
   closeDialog(){
-    this.customDialogManager.dialogAction$.next({dialogId: this.id, action: 'close'})
+    this.dynamicDialogRef.close()
   }
 }

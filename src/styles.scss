@@ -9,3 +9,15 @@
 body{
   background: #fff;
 }
+
+app-dialog-header{
+  width: 100%;
+}
+
+.custom-dialog-mask{
+  &.p-overlay-mask{
+    background: unset !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+  }
+}
