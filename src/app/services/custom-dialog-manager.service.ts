@@ -14,6 +14,7 @@ export interface DialogAction {
 })
 export class CustomDialogManagerService {
   dialogAction$: BehaviorSubject<DialogAction> = new BehaviorSubject<DialogAction>({})
+  dialogClose$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
 
   constructor() { }
 }

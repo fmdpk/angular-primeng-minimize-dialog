@@ -9,6 +9,7 @@ import {CustomDialogManagerService, DialogAction} from '../../services/custom-di
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {DialogHeaderComponent} from '../dialog-header/dialog-header.component';
+import {Subscription} from 'rxjs';
 
 export interface AppDialog {
   id: number;
@@ -19,6 +20,11 @@ export interface AppDialog {
   dialogRef?: DynamicDialogRef
   data?: any,
   class: string
+}
+
+export interface dialogSubscription {
+  id: number;
+  subscription: Subscription
 }
 
 @Component({
@@ -41,7 +47,7 @@ export interface AppDialog {
 export class DialogManagerComponent implements OnInit {
   dialogs: AppDialog[] = [];
   minimizedDialogs: AppDialog[] = [];
-  dialogRefs: DynamicDialogRef[] = [];
+  dialogSubs: dialogSubscription[] = [];
   dialogCounter = 0;
   customDialogManagerService: CustomDialogManagerService = inject(CustomDialogManagerService)
   dialogService: DialogService = inject(DialogService)
@@ -101,8 +107,23 @@ export class DialogManagerComponent implements OnInit {
         header: DialogHeaderComponent
       }
     });
-    console.log(this.ref)
-    this.dialogRefs.push(this.ref)
+    const sub = this.ref.onClose.subscribe((res) => {
+      console.log(res)
+      this.clearDialogSubscription(res)
+    });
+    this.dialogSubs.push({
+      id: this.dialogCounter,
+      subscription: sub
+    })
+  }
+
+  clearDialogSubscription(dialogId: number){
+    this.dialogSubs = this.dialogSubs.filter(item => {
+      if(item.id === dialogId){
+        item.subscription.unsubscribe()
+      }
+      return item.id !== dialogId
+    })
   }
 
   async getDialogComponent(component: any, name: string){

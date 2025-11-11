@@ -15,13 +15,22 @@ import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 export class UserFormComponent implements OnInit{
   @Input() id!: number;
   dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef)
+  dynamicDialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig)
+  customDialogManager: CustomDialogManagerService = inject(CustomDialogManagerService)
 
   ngOnInit(){
     console.log('app-user-form')
+    this.customDialogManager.dialogClose$.subscribe(res => {
+      if(res == this.dynamicDialogConfig.data.dialog.id){
+        this.closeDialog()
+      }
+    })
     console.log(this.id)
   }
 
   closeDialog(){
-    this.dynamicDialogRef.close()
+    console.log(this.dynamicDialogConfig)
+    this.customDialogManager.dialogClose$.next(0)
+    this.dynamicDialogRef.close({dialogId: this.dynamicDialogConfig.data?.dialog.id})
   }
 }

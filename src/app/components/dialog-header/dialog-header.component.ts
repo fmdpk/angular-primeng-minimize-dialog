@@ -21,7 +21,7 @@ export class DialogHeaderComponent implements OnInit{
   destroyRef: DestroyRef = inject(DestroyRef)
   dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef)
   customDialogManager: CustomDialogManagerService = inject(CustomDialogManagerService)
-  dialog = this.dynamicDialogConfig.data.dialog
+  dialog: AppDialog = this.dynamicDialogConfig.data.dialog
 
   ngOnInit() {
     this.customDialogManager.dialogAction$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
@@ -40,7 +40,8 @@ export class DialogHeaderComponent implements OnInit{
   }
 
   closeDialog(dialog: AppDialog){
-    this.dynamicDialogRef.close()
+    // this.dynamicDialogRef.close()
+    this.customDialogManager.dialogClose$.next(this.dialog.id)
   }
 
 }
