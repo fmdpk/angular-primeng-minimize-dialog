@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Button} from 'primeng/button';
-import {DynamicDialogConfig} from 'primeng/dynamicdialog';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-dialog-header',
@@ -14,8 +14,13 @@ import {DynamicDialogConfig} from 'primeng/dynamicdialog';
 export class DialogHeaderComponent implements OnInit{
 
   dynamicDialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig)
+  dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef)
   ngOnInit() {
     console.log(this.dynamicDialogConfig)
+    console.log(this.dynamicDialogRef)
+    this.dynamicDialogRef.onChildComponentLoaded.subscribe(res => {
+      console.log(res)
+    })
   }
 
 }

@@ -5,8 +5,6 @@ import {PrimeTemplate} from 'primeng/api';
 import {PopoverModule} from 'primeng/popover';
 import {NgComponentOutlet, NgForOf, NgIf} from '@angular/common';
 import {DialogContentComponent} from './child-components/dialog-content/dialog-content.component';
-import {UserFormComponent} from '../user-form/user-form.component';
-import {ReportViewerComponent} from '../report-viewer/report-viewer.component';
 import {CustomDialogManagerService, DialogAction} from '../../services/custom-dialog-manager.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
@@ -60,21 +58,21 @@ export class DialogManagerComponent implements OnInit {
     })
   }
 
-  openNewDialog() {
-    // let newDialog: AppDialog = {
-    //   id: ++this.dialogCounter,
-    //   title: `Dialog #${this.dialogCounter}`,
-    //   content: `This is the content of dialog #${this.dialogCounter}`,
-    //   visible: true,
-    //   class: `Dialog-${this.dialogCounter} minimizable-dialogs`,
-    //   minimized: false,
-    //   data: {
-    //     id: this.dialogCounter
-    //   },
-    //   component: this.dialogCounter % 2 === 0 ? UserFormComponent : ReportViewerComponent
-    // };
-    // this.dialogs.push(newDialog);
-    this.ref = this.dialogService.open(UserFormComponent, {
+  async openNewDialog() {
+    let component = this.dialogCounter % 2 === 0 ? () => import('../user-form/user-form.component').then(c => c.UserFormComponent) : () => import('../report-viewer/report-viewer.component').then(c => c.ReportViewerComponent)
+    let newDialogData: AppDialog = {
+      id: ++this.dialogCounter,
+      title: `Dialog #${this.dialogCounter}`,
+      content: `This is the content of dialog #${this.dialogCounter}`,
+      visible: true,
+      class: `Dialog-${this.dialogCounter} minimizable-dialogs`,
+      minimized: false,
+      data: {
+        id: this.dialogCounter
+      },
+      component
+    };
+    this.ref = this.dialogService.open(await component(), {
       header: 'Select a Product',
       closeOnEscape: true,
       keepInViewport: false,
@@ -87,7 +85,7 @@ export class DialogManagerComponent implements OnInit {
         '640px': '90vw'
       },
       data: {
-        dialog: this.dialogCounter
+        dialog: newDialogData
       },
       templates: {
         header: DialogHeaderComponent
