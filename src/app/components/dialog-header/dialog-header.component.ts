@@ -25,7 +25,7 @@ export class DialogHeaderComponent implements OnInit{
 
   ngOnInit() {
     this.customDialogManager.dialogAction$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
-      if(res.dialog && res.action === 'enlarge'){
+      if(res.dialog && res.action === 'enlarge-in-component'){
         let elem = document.getElementsByClassName(`${res.dialog.class.split(' ')[0]}`)
         elem[0].parentElement!.style.display = 'flex';
       }
