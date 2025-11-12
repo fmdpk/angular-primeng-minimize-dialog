@@ -32,15 +32,14 @@ export class DialogHeaderComponent implements OnInit{
     })
   }
 
-  minimizeDialog(dialog: AppDialog){
-    let elem = document.getElementsByClassName(`${dialog.class.split(' ')[0]}`)
+  minimizeDialog(){
+    let elem = document.getElementsByClassName(`${this.dialog.class.split(' ')[0]}`)
     elem[0].parentElement!.style.display = 'none';
     this.dialog.dialogRef = this.dynamicDialogRef
     this.customDialogManager.dialogAction$.next({dialog: this.dialog, dialogRef: this.dynamicDialogRef,action: 'minimize'})
   }
 
-  closeDialog(dialog: AppDialog){
-    // this.dynamicDialogRef.close()
+  closeDialog(){
     this.customDialogManager.dialogClose$.next(this.dialog.id)
   }
 

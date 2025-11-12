@@ -1,7 +1,7 @@
 <div class="custom-dialog-title">
   <span>{{ dialog.class }}</span>
   <div class="flex gap-2">
-    <p-button (click)="minimizeDialog(dialog)" [rounded]="true" [text]="true" icon="{{ dialog.minimized ? 'pi pi-window-maximize' : 'pi pi-window-minimize' }}" />
-    <p-button (click)="closeDialog(dialog)" [rounded]="true" [text]="true" icon="pi pi-times"/>
+    <p-button (click)="minimizeDialog()" [rounded]="true" [text]="true" icon="{{ dialog.minimized ? 'pi pi-window-maximize' : 'pi pi-window-minimize' }}" />
+    <p-button (click)="closeDialog()" [rounded]="true" [text]="true" icon="pi pi-times"/>
   </div>
 </div>
